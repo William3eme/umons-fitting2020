@@ -1,0 +1,126 @@
+body,header{
+    width: 100vw;
+    margin:0;
+    padding:0;
+    box-sizing: border-box;
+}
+#vue{
+    background-color: lightgray;
+    height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+header{
+    height: 100px;
+    background-color: teal;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+}
+header > * {
+    margin-top: auto;
+    margin-bottom: auto;
+}
+header > h1 {
+
+    font-family: Impact;
+    font-size: 50PX;
+    color:white;
+}
+
+header > div {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-between;
+    padding: 20px;
+}
+
+header > img {
+    height:100px;
+}
+header > div >img {
+    height: 60px;
+}
+
+#DataArea{
+    /* padding: 20px; */
+    flex-grow: 1;
+    display: flex;
+    justify-content: space-between;
+   
+}
+#FilesArea{
+    /* background-color: blueviolet; */
+    height: 100%;
+    width: 300px;
+    padding: 0;
+    margin: 0;
+    border: 1px black solid;
+}
+#FilesArea ol{
+    margin: 0;
+    padding: 0 0 0 0;
+    height: 100%;
+    background-color: white;
+    list-style: none;
+    overflow: scroll;
+    overflow-x: hidden;
+    /* border: 1px black solid; */
+}
+
+#FilesArea li{
+    text-align: center;
+    min-height: 30px;
+}#FilesArea li > h3{
+    margin: 0;
+    padding: 0;
+    background-color: lightgrey;
+    height: 30px;
+    font-weight: bold;
+}
+#FilesArea li > label{
+    /* margin: 0 5px 0 5px; */
+    display: block;
+    border-top: 1px black solid;
+    height: 30px;
+    width: 100%;
+}
+#FilesArea li :hover{
+    font-weight: bold;
+}
+
+#GraphArea{
+    background-color: white;
+    flex-grow: 1;
+}
+#ConfArea{
+    height: 200px;
+    display: flex;
+    flex-direction: row;
+    /* background-color: pink; */
+}
+#ConfArea > div{
+    padding: 20px;
+    min-width: 300px;
+}
+#addFile{
+    padding: 20px;
+    position: absolute;
+    top:100px;
+    left:100px;
+    width: 400px;
+    height:400px;
+    background-color: white;
+    border: 1px black solid;
+}
+#getrawdata{
+    padding: 20px;
+    position: absolute;
+    top:100px;
+    left:100px;
+    width: 400px;
+    height:400px;
+    background-color: white;
+    border: 1px black solid;
+}

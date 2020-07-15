@@ -1,0 +1,21 @@
+<html>
+<head>
+    <script src="https://cdn.jsdelivr.net/npm/brython@3.8.9/brython.min.js"></script>
+    <script src="/src_public/brython_modules.js"></script>
+</head>
+<body onload="brython()">
+<script type="text/python">
+    import iminuit
+    from browser import document
+    from browser.widgets.dialog import InfoDialog
+
+    def click(ev):
+        InfoDialog("Hello", f"Bonjour, {document['zone'].value} !")
+
+    # associe une fonction à l'événement "click" sur le bouton
+    document["echo"].bind("click", click)
+</script>
+<input id="zone">
+<button id="echo">click !</button>
+</body>
+</html>

@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>index</title>
+</head>
+<body>
+	<div id="vue">
+		<header>
+			<img src="img/umons.jpg" alt="">
+			<h1>Fitting 2020</h1>
+			<div>
+				<img src="img/add.svg" alt="" @click="addFile = !addFile">
+				<img v-if="File.uid" src="img/del.svg" alt="" v-on:click="deleteFile(File.uid)">
+				<img v-if="File.uid" src="img/download.png" alt="">
+			</div>
+		</header>
+		<div id="DataArea">
+			<div id="FilesArea">	
+				<ol>
+					<li><h3>Fichiers disponibles:</h3></li>
+					<li v-for="file in fileIndex" v-on:click="getFile(file.uid)">
+						<label v-if="file.uid == File.uid" style="background-color:lightgrey;">
+							{{file.name}}
+						</label>
+						<label v-else style="background-color:white;">
+							{{file.name}}
+						</label>
+						<!-- <input type="radio"  name="fileSelector" v-bind:value="file.uid" v-bind:id="file.uid" v-on:click="getFile(file.uid)"><label v-bind:for="file.uid">{{file.name}}</label> -->
+					</li>
+				</ol>
+			</div>
+			<div id="GraphArea">
+				<svg id="graph"></svg>
+			</div>
+		</div>
+		<div id="ConfArea">
+			<div v-if="File.uid">
+				UID:<input type="text" v-model="File.uid" disabled><br>
+				Label:<input type="text" v-model="File.name"><br>
+				Concetration:
+				<input type="number" step="0.1"v-model="File.rawdata.concentration" v-on:change="putFile(File)"><br>
+				Offset type:
+				<input type="radio" v-model="File.rawdata.offset.type" value="constant"  v-on:change="putFile(File)">Constant 
+				<input type="radio" v-model="File.rawdata.offset.type" value="variable" v-on:change="putFile(File)">Variable
+				<br> 
+				Offset:
+				<input type="number" step="0.01" v-model="File.rawdata.offset.data" v-if="File.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">
+				<select v-model="File.rawdata.offset.uid" v-if="File.rawdata.offset.type == 'variable'" v-on:change="putFile(File)">
+					<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
+				</select>
+				<br>
+
+				<br> Models:
+				<select v-model="modelSelected" @change="loadModel(this.value)">
+					<option value=""></option>
+					<option v-for="(model,key) in Models" v-bind:value="key">{{model.name}}</option>
+				</select>
+			</div>
+			<div v-if="File.model">
+				<input type="button" value="Minimisation !" @click="Minimise(File)">
+				<div v-for="(p,key) in File.model.params" style="display: inline-block;">
+					<!-- <input type="button" value="try it"  -->
+					<label for="">{{p.label}}</label>
+					<input type="button" value="l" @click="p.fixed = !p.fixed">
+					<input 
+						v-bind:disabled="p.fixed"
+						type="number" 
+						v-bind:step="p.step"
+						v-bind:max="p.max"
+						v-bind:min="p.min"
+						v-model="File.model.params[key].value" 
+						v-on:change="renderGraph(File)"
+					/>
+				</div>
+			</div>
+		</div>
+		<div id="addFile" v-show="addFile">
+			Fichiers:<input type="file" @change="loadFile"><br>
+			<div v-if="addFile2">
+				Label:<input type="text" v-model="pFile.name" v-bind:value="pFile.rawdata.label"><br>
+				Concetration:<input type="number" step="0.1"v-model="pFile.rawdata.concentration" value="1"><br>
+				Offset type:
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant">Constant
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="variable">Variable<br> 
+				Offset:
+				<input type="number" step="0.01" v-model="pFile.rawdata.offset.data" v-if="pFile.rawdata.offset.type == 'constant'" >
+				<select v-model="pFile.rawdata.offset.uid" v-if="pFile.rawdata.offset.type == 'variable'">
+					<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
+				</select>
+				<input type="button" value="Envoyer" @click="postFile(pFile)">
+			</div>
+		</div>
+	<input type="button" value="afficher rawdata" @click="getrawdata = !getrawdata">
+		<div id="getrawdata" v-show="getrawdata">
+					
+		</div>
+
+	</div>
+	<script src="js/app.js"></script>    
+
+</body>
+</html>

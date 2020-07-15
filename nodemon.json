@@ -1,0 +1,8 @@
+{
+    "ignore": [
+        "src_public/*",
+        "public/*",
+        "node_modules",
+        "files/*"
+    ]
+}

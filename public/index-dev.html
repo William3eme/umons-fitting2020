@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="stylesheet" href="./index.css">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+	<title>index</title>
+</head>
+<body>
+	<div id="vue">
+		<header>Barre de navigation</header>
+		<div id="DataArea">
+			<div id="FilesArea">
+				<ol>
+					<li v-for="(fileName,uid) in fileIndex">
+						<input type="radio"  name="fileSelector" v-bind:value="uid" v-bind:id="uid" v-on:click="getFile(uid)"><label v-bind:for="uid">{{fileName}}</label>
+						<input type="button" v-on:click="deleteFile(uid)" value="Delete">
+						<input type="button" v-on:click="putFile(File)" value="Update" v-if="File && File.uid==uid">
+					</li>
+					<!-- <div v-if="fileSelected">
+
+						UID:<input type="text" v-model="fileSelected.uid" disabled><br>
+						Label:<input type="text" v-model="fileSelected.label"><br>
+						Concetration:<input type="number" step="0.1"v-model="fileSelected.concentration" v-on:change="updateGraph(fileSelected)"><br>
+						Offset type:
+							<input type="radio" v-model="fileSelected.offset.type" value="constant">Constant 
+							<input type="radio" v-model="fileSelected.offset.type" value="variable">Variable
+							<br> 
+						Offset:
+							<input type="number" step="0.01" v-model="fileSelected.offset.data" v-if="fileSelected.offset.type == 'constant'" v-on:change="updateGraph(fileSelected)">
+							<select v-model="fileSelected.offset.data" v-if="fileSelected.offset.type == 'variable'">
+								<option v-for="file in Files" v-bind:value="file.uid">{{file.name}}</option>
+							</select>
+							<br>
+					</div> -->
+				</ol>	
+				<input type="file" @change="postFile">
+				<div v-if="File && File.uid">
+					UID:<input type="text" v-model="File.uid" disabled><br>
+					Label:<input type="text" v-model="File.label"><br>
+					Concetration:<input type="number" step="0.1" min="0.1" v-model="File.concentration" v-on:change="renderGraph(File)"><br>
+					Offset type:
+						<input type="radio" v-model="File.offset.type" value="constant">Constant 
+						<input type="radio" v-model="File.offset.type" value="variable">Variable
+						<br> 
+					Offset:
+						<input type="number" step="0.01" v-model="File.offset.data" v-if="File.offset.type == 'constant'" v-on:change="renderGraph(File)">
+						<select v-model="File.offset.data" v-if="File.offset.type == 'variable'">
+							<option v-for="file in Files" v-bind:value="file.uid">{{file.name}}</option>
+						</select>
+						<br>
+				</div> 
+				<br> Models:
+				<select v-if="Models" v-model ="modelKey" v-on:change="renderGraph(Object.assign({},Models[modelKey]))">
+					<option value=""></option>
+					<option v-for="(model,key) in Models" v-bind:value="key">{{model.name}}</option>
+				</select>
+			</div>
+			<div>&nbsp;</div>
+			<div id="GraphArea">
+				<svg height="600px" width="900px"></svg> <br>
+				<div v-for="(p,key) in Model.params" style="display: inline-block;">
+					<label for="">{{p.label}}</label>
+					<input 
+						type="number" 
+						v-bind:step="p.step"
+						v-bind:max="p.max"
+						v-bind:min="p.min"
+						v-model="Model.params[key].value" 
+						v-on:change="renderGraph(Model)"
+					/>
+				</div>
+				<!-- <div v-for="coef in coefSelector" style="display: inline-block;">
+					<label for="">{{modelSelected.params[coef].label}}</label>
+					<input 
+						type="number" 
+						v-bind:step="modelSelected.params[coef].step"
+						v-bind:max="modelSelected.params[coef].max"
+						v-bind:min="modelSelected.params[coef].min"
+						v-model="modelSelected.params[coef].value" 
+						v-on:change="updateModel(modelSelected)">
+				</div> -->
+			</div>
+			<div>&nbsp;</div>
+		</div>
+	</div>
+	<script src="js/dev.js"></script>    
+</body>
+</html>
