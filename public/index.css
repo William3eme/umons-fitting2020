@@ -5,7 +5,7 @@ body,header{
     box-sizing: border-box;
 }
 #vue{
-    background-color: lightgray;
+    background-color: lightgrey;
     height: 100vh;
     display: flex;
     flex-direction: column;
@@ -123,4 +123,21 @@ header > div >img {
     height:400px;
     background-color: white;
     border: 1px black solid;
+}
+
+#container{
+    display:flex;
+    flex-direction: row;
+    flex-wrap: wrap;
+    background-color: lightgrey;
+    height: 155px;
+    width: 100vw;
+}
+
+#cell{
+    border: 1px black solid;
+    border-radius: 5px;
+    height: 30px;
+    width: 300px;
+    margin: 2px;
 }

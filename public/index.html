@@ -16,6 +16,7 @@
 				<img src="img/add.svg" alt="" @click="addFile = !addFile">
 				<img v-if="File.uid" src="img/del.svg" alt="" v-on:click="deleteFile(File.uid)">
 				<img v-if="File.uid" src="img/download.png" alt="">
+				<input type="button" value="Minimisation !" @click="Minimise(File)">
 			</div>
 		</header>
 		<div id="DataArea">
@@ -60,29 +61,32 @@
 					<option v-for="(model,key) in Models" v-bind:value="key">{{model.name}}</option>
 				</select>
 			</div>
-			<div v-if="File.model">
-				<input type="button" value="Minimisation !" @click="Minimise(File)">
-				<div v-for="(p,key) in File.model.params" style="display: inline-block;">
-					<!-- <input type="button" value="try it"  -->
-					<label for="">{{p.label}}</label>
-					<input type="button" value="l" @click="p.fixed = !p.fixed">
-					<input 
-						v-bind:disabled="p.fixed"
-						type="number" 
-						v-bind:step="p.step"
-						v-bind:max="p.max"
-						v-bind:min="p.min"
-						v-model="File.model.params[key].value" 
-						v-on:change="renderGraph(File)"
-					/>
-				</div>
+			<div id="container">
+				<div v-if="File.model">
+
+					<div v-for="(p,key) in File.model.params" style="display: inline-block;" id="cell">
+						<!-- <input type="button" value="try it"  -->
+						<label for="">{{p.label}}</label>
+						<!-- v-bind:disabled="p.fixed" <input type="button" value="l" @click="p.fixed = !p.fixed"> -->
+						<input 
+
+							type="number" 
+							v-bind:step="p.step"
+							v-bind:max="p.max"
+							v-bind:min="p.min"
+							v-model="File.model.params[key].value" 
+							v-on:change="renderGraph(File)"
+						/>
+					</div>
+				</div>		
 			</div>
+
 		</div>
 		<div id="addFile" v-show="addFile">
 			Fichiers:<input type="file" @change="loadFile"><br>
 			<div v-if="addFile2">
 				Label:<input type="text" v-model="pFile.name" v-bind:value="pFile.rawdata.label"><br>
-				Concetration:<input type="number" step="0.1"v-model="pFile.rawdata.concentration" value="1"><br>
+				Concentration:<input type="number" step="0.1"v-model="pFile.rawdata.concentration" value="1"><br>
 				Offset type:
 				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant">Constant
 				<input type="radio" v-model="pFile.rawdata.offset.type" value="variable">Variable<br> 
@@ -94,11 +98,6 @@
 				<input type="button" value="Envoyer" @click="postFile(pFile)">
 			</div>
 		</div>
-	<input type="button" value="afficher rawdata" @click="getrawdata = !getrawdata">
-		<div id="getrawdata" v-show="getrawdata">
-					
-		</div>
-
 	</div>
 	<script src="js/app.js"></script>    
 
