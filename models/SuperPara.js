@@ -22,8 +22,8 @@ module.exports = {
             value:310, 
         },
         VMHFL:{
-            value:1
-         }
+            value:0.9408
+        }
     },
     
     run:function(f,params = this.params){
@@ -106,8 +106,8 @@ module.exports = {
         // *** LANGEVIN *** //
         let HTESLA = f*4.7/200.
         let EXPLA = (HTESLA*MSATU2)/(1.380662E-23*params.Temp.value)
-        let LANG = 1./EXPLA
-        if(EXPLA<=80.)
+        let LANG = 1/EXPLA
+        if(EXPLA<=80)
         {
             if(EXPLA<0.003)
             {
@@ -138,6 +138,12 @@ module.exports = {
 
         // *** R2 *** //
         // R2 = 6.5*params.P.value*LANG*R2TRANF+ (1-params.P.value)*LANG*(3.5*R1TRANF+3.*FirstR1TRANF)+ (1-LANG2-2*LANG)*(1.5*R1TRANF+2*FirstR1TRANF)+ LANG2*(1.5*R1TRANB+2*FirstR1TRANB)
+
+        // *** Freed *** //
+        Freed = R1TRANF;
+
+        // *** Ayant *** //
+        Ayant = R1TRANB;
 
         return {x:f,y:R1}
     }  

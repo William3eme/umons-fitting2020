@@ -1,7 +1,7 @@
 import sys
 import json
-import os
 import codecs
+import os
 # import probfit
 import  numpy
 # from matplotlib import pyplot as plt
@@ -16,7 +16,6 @@ try:
     with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
     # with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
         fit = json.loads(f.read())
-
     # Je récupère mes données brutes (rawdata)
     rawdata = list(fit["rawdata"]["data"])
     concentration  = float(fit["rawdata"]["concentration"])
@@ -102,10 +101,10 @@ try:
         fix_TAUS0 = params["TAUS0"]["fixed"],
         fix_TAUM = params["TAUM"]["fixed"],
         fix_TAUR = params["TAUR"]["fixed"],
-        fix_dw = params["dw"]["fixed"],
+        # fix_dw = params["dw"]["fixed"],
         fix_COUPL = params["COUPL"]["fixed"],
         fix_distrot = params["distrot"]["fixed"],
-    )
+    ) 
 
     m.migrad() # finds minimum of least_squares function
     m.hesse()  # computes errors 
@@ -124,6 +123,5 @@ try:
 # os.close(1)
 except:
     print("PAS OK")
-    # print(fit)
     # os.close(0)
     # exit(0)

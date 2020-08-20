@@ -53,7 +53,8 @@ const loadFile = (event)=>{
     let file = new FileReader()
     file.readAsText(event.target.files[0], 'UTF-8');
     file.addEventListener('load', function() {
-        vue.pFile.type = "Fit"
+        //ici mettre les données par défaut
+        vue.pFile = {type:"Fit"}
         vue.pFile.rawdata = parseData(file.result)
         vue.addFile2 = true
         // console.log("done:",vue.pFile.rawdata)
@@ -67,6 +68,32 @@ const loadFile = (event)=>{
       
     });
 }
+const config = (target,key)=>{
+    // alert(target)
+    vue.pmodel = Object.assign({},target)
+    vue.configparams = true
+    vue.key = key
+
+}
+
+const validconfig = (key)=>{
+    vue.File.model.params[key]=vue.pmodel
+    vue.pmodel.maxM=parseFloat(vue.pmodel.maxM)
+    vue.pmodel.minM=parseFloat(vue.pmodel.minM)
+    vue.pmodel.fixed=vue.pmodel.fixed    
+    putFile(vue.File)
+    vue.key=""
+    vue.configparams=false
+    vue.pFile={}
+}
+
+const axeLoad = (type)=>{
+    if (vue.axetype == "relaxation"){
+        vue.File.rawdata.concentration = 1
+        vue.File.rawdata.offset.data = 0
+        renderGraph(vue.File)
+    }
+}        
 const deleteFile = (uid) =>{
     http.delete(`/api/files/${uid}`)
         .then((res)=>{
@@ -96,9 +123,13 @@ var vue = new Vue({
         Models:{},
         File:{},
         addFile:false,
+        configparams:false,
         addFile2:false,
         getrawdata:false,
         pFile:{},
+        pmodel:{},
+        key:{},
+        axetype:"relaxivity",
     },
     mounted(){
         let graph_cfg = require("./graph.json")
@@ -126,9 +157,13 @@ var vue = new Vue({
                 vue.File = res.data
                 document.cookie = res.data.uid
                 renderGraph(vue.File) 
+                // vue.postFile = false
             })
         },
         loadFile:loadFile,
+        config:config,
+        validconfig:validconfig,
+        axeLoad:axeLoad,
         deleteFile:deleteFile,
         selectModel:selectModel,
         renderGraph:renderGraph,
@@ -139,12 +174,12 @@ var vue = new Vue({
                 vue.File = res.data // attention si il y a une erreur dans la minimisation 
                 if(vue.File.model){
                     vue.modelSelected = vue.File.model.key
+
                     vue.File.model = Object.assign(vue.Models[vue.modelSelected],vue.File.model)
                     console.log(vue.model)
                 }
                 renderGraph(vue.File)
             })
-            
         }
     }
 })

@@ -1,6 +1,8 @@
 import sys
 import json
 import os
+import codecs
+
 # import probfit
 import  numpy
 # from matplotlib import pyplot as plt
@@ -12,8 +14,11 @@ try:
     uid = sys.argv [1]
     # print(os.getcwd())
     fit = {}
-    with open("./files/{}.json".format(uid), 'r') as f:
+    with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
         fit = json.loads(f.read())
+    
+    # print(fit)
 
     # Je récupère mes données brutes (rawdata)
     rawdata = list(fit["rawdata"]["data"])
@@ -39,6 +44,10 @@ try:
 
 
     params = fit["model"]["params"]
+    min = params["COLED"]["minM"]
+    max = params["COLED"]["maxM"]
+
+    # print(min,max)
 
     def line(x,COLED,COLEA,COLEFC,COLEB): 
 
@@ -50,25 +59,44 @@ try:
 
     data_yerr = 0.000001
     least_squares = LeastSquares(rawdata_x, rawdata_y, data_yerr, line)
-    # # pass starting values for a and b
-    m = Minuit(least_squares,COLED=params["COLED"]["value"],COLEA=params["COLEA"]["value"],COLEFC=params["COLEFC"]["value"],COLEB=params["COLEB"]["value"], limit_COLED=(0.1, 9E1),limit_COLEA=(0.1, 6E1),limit_COLEFC=(1**3,2E8),limit_COLEB=(0.1,3)) 
+    # pass starting values for a and b
+    m = Minuit(least_squares,
+    COLED=params["COLED"]["value"],
+    COLEA=params["COLEA"]["value"],
+    COLEFC=params["COLEFC"]["value"],
+    COLEB=params["COLEB"]["value"],
+    limit_COLED=(float(params["COLED"]["minM"]),float(params["COLED"]["maxM"])),
+    limit_COLEA=(float(params["COLEA"]["minM"]),float(params["COLEA"]["maxM"])),
+    limit_COLEFC=(float(params["COLEFC"]["minM"]),float(params["COLEFC"]["maxM"])),
+    limit_COLEB=(float(params["COLEB"]["minM"]),float(params["COLEB"]["maxM"])),
+    fix_COLED=params["COLED"]["fixed"],
+    fix_COLEA=params["COLEA"]["fixed"],
+    fix_COLEFC=params["COLEFC"]["fixed"],
+    fix_COLEB=params["COLEB"]["fixed"],
+    ) 
 
     m.migrad() # finds minimum of least_squares function
-    m.hesse()  # computes errors 
+    # m.hesse()  # computes errors 
+    # m.minos()
 
     res = m.values.values()
     for i,element in enumerate(params):
         params[element]["value"] = res[i]
 
 
-    with open("./files/{}.json".format(uid), 'w') as f:
-        f.write(json.dumps(fit))
+
+
+    with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+        f.write(json.dumps(fit,ensure_ascii=False))
     print("OK")
-    # sys.exit(42)
+    # print(fit)
+    # # sys.exit(42)
 
 # os.close(1)
 except:
     print("PAS OK")
+    # print(fit)
     # os.close(0)
     # exit(0)
 

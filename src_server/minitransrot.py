@@ -1,5 +1,6 @@
 import sys
 import json
+import codecs
 import os
 # import probfit
 import  numpy
@@ -18,7 +19,11 @@ try:
     # Je récupère mes données brutes (rawdata)
     rawdata = list(fit["rawdata"]["data"])
     concentration  = float(fit["rawdata"]["concentration"])
-    offset = (fit["rawdata"]["offset"]["data"])
+    offset=0
+    if(fit["rawdata"]["offset"]["type"]=="constant"):
+        offset = float(fit["rawdata"]["offset"]["data"])
+    else:
+        offset = (fit["rawdata"]["offset"]["data"])
     rawdata_x=[]
     rawdata_y=[]
     for element in rawdata:
@@ -29,7 +34,13 @@ try:
     rawdata_y =  numpy.array(rawdata_y)
 
     rawdata_y = rawdata_y/concentration-offset
+    # print("{} = {}".format(offset,type(offset)))
 
+
+    params = fit["model"]["params"]
+    # print(params)
+    # for i,e in enumerate(params):
+    #     print("{}= {}".format(i,e))
 
     def line(x,CONC,SOLV,PROPR,gl,SPIN,TAUV,TAUS0,TAUM,TAUR,dw,COUPL,distrot,B,DIF,PROPT): 
         VMHFL = 1
@@ -149,8 +160,9 @@ try:
         params[element]["value"] = res[i]
 
 
-    with open("./files/{}.json".format(uid), 'w') as f:
-        f.write(json.dumps(fit))
+    with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+        f.write(json.dumps(fit,ensure_ascii=False))
     print("OK")
     # sys.exit(42)
 

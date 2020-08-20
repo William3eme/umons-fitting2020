@@ -40,20 +40,29 @@
 		</div>
 		<div id="ConfArea">
 			<div v-if="File.uid">
-				UID:<input type="text" v-model="File.uid" disabled><br>
+				<!-- UID:<input type="text" v-model="File.uid" disabled><br> -->
+	
+				Axe type:			
+				<input type="radio" v-model="axetype" value="relaxivity"  v-on:change="axeLoad()">relaxivity
+				<input type="radio" v-model="axetype" value="relaxation"  v-on:change="axeLoad()">relaxation rate <br>
+			
+
 				Label:<input type="text" v-model="File.name"><br>
-				Concetration:
-				<input type="number" step="0.1"v-model="File.rawdata.concentration" v-on:change="putFile(File)"><br>
-				Offset type:
-				<input type="radio" v-model="File.rawdata.offset.type" value="constant"  v-on:change="putFile(File)">Constant 
-				<input type="radio" v-model="File.rawdata.offset.type" value="variable" v-on:change="putFile(File)">Variable
-				<br> 
-				Offset:
-				<input type="number" step="0.01" v-model="File.rawdata.offset.data" v-if="File.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">
-				<select v-model="File.rawdata.offset.uid" v-if="File.rawdata.offset.type == 'variable'" v-on:change="putFile(File)">
-					<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
-				</select>
-				<br>
+				<div v-if="axetype=='relaxivity'">
+
+					Concetration:
+					<input type="number" step="0.1"v-model="File.rawdata.concentration" v-on:change="putFile(File)"><br>
+					Offset type:
+					<input type="radio" v-model="File.rawdata.offset.type" value="constant"  v-on:change="putFile(File)">Constant 
+					<input type="radio" v-model="File.rawdata.offset.type" value="variable" v-on:change="putFile(File)">Variable
+					<br> 
+					Offset:
+					<input type="number" step="0.01" v-model="File.rawdata.offset.data" v-if="File.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">
+					<select v-model="File.rawdata.offset.uid" v-if="File.rawdata.offset.type == 'variable'" v-on:change="putFile(File)">
+						<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
+					</select>
+					<br>
+				</div>
 
 				<br> Models:
 				<select v-model="modelSelected" @change="loadModel(this.value)">
@@ -64,10 +73,13 @@
 			<div id="container">
 				<div v-if="File.model">
 
-					<div v-for="(p,key) in File.model.params" style="display: inline-block;" id="cell">
+					<div v-for="p,key in File.model.params" style="display: inline-block;" id="cell">
 						<!-- <input type="button" value="try it"  -->
 						<label for="">{{p.label}}</label>
-						<!-- v-bind:disabled="p.fixed" <input type="button" value="l" @click="p.fixed = !p.fixed"> -->
+						
+
+						<input type="button" value="c" v-on:click="config(p,key)">
+
 						<input 
 
 							type="number" 
@@ -76,6 +88,8 @@
 							v-bind:min="p.min"
 							v-model="File.model.params[key].value" 
 							v-on:change="renderGraph(File)"
+							v-bind:disabled="p.fixed" 
+							
 						/>
 					</div>
 				</div>		
@@ -86,6 +100,8 @@
 			Fichiers:<input type="file" @change="loadFile"><br>
 			<div v-if="addFile2">
 				Label:<input type="text" v-model="pFile.name" v-bind:value="pFile.rawdata.label"><br>
+
+
 				Concentration:<input type="number" step="0.1"v-model="pFile.rawdata.concentration" value="1"><br>
 				Offset type:
 				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant">Constant
@@ -95,8 +111,23 @@
 				<select v-model="pFile.rawdata.offset.uid" v-if="pFile.rawdata.offset.type == 'variable'">
 					<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
 				</select>
+				
 				<input type="button" value="Envoyer" @click="postFile(pFile)">
 			</div>
+		</div>
+		<div id="configparams" v-show="configparams" >
+			step:<input type="number" step="0.1" v-model="pmodel.step" value="1">
+				</br>
+			min:<input type="number" step="0.1" v-model="pmodel.minM" value="1">
+				</br>
+			max:<input type="number" step="0.1" v-model="pmodel.maxM" value="1">
+				</br>
+			fix:   
+			<label for="oui"> oui : </label>
+			<input type="checkbox" name="oui" value="true" v-model="pmodel.fixed">
+				</br>
+			<input type="button" value="valider" v-on:click="validconfig(key)"> 
+			<input type="button" value="retour" v-on:click="configparams = false"> 
 		</div>
 	</div>
 	<script src="js/app.js"></script>    

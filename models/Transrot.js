@@ -121,7 +121,7 @@ module.exports = {
         },
         gl:{
            value:2,
-           label:"g Landé",
+           label:"g Lande",
            detail:"Landé factor",
            step:1E-1,
            minM:0.01,
@@ -166,6 +166,7 @@ module.exports = {
            unite:"",
            min:0,
            step:1E-11,
+           fixed:"true",
            varience:1
         },
       //   mu:{

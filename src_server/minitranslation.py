@@ -1,6 +1,7 @@
 import sys
 import json
 import os
+import codecs
 # import probfit
 import  numpy
 # from matplotlib import pyplot as plt
@@ -12,7 +13,8 @@ try:
     uid = sys.argv [1]
     # print(os.getcwd())
     fit = {}
-    with open("./files/{}.json".format(uid), 'r') as f:
+    with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
         fit = json.loads(f.read())
 
     # Je récupère mes données brutes (rawdata)
@@ -95,22 +97,22 @@ try:
         TAUV=params["TAUV"]["value"],
         PROPT=params["PROPT"]["value"],
         gl=params["gl"]["value"],
-        limit_CONC=(1E-4, 1E-2),
-        limit_SPIN=(0.5,4.5),
-        limit_B=(1.5E-8,4.5E-8),
-        limit_DIF=(4.0E-6,5.0E-5),
-        limit_TAUS0=(1E-11,1E-8),
-        limit_TAUV=(1E-12,1E-8),
-        limit_PROPT=(0.1,1E2),
-        limit_gl=(0.01,3),
-        fix_CONC = True,
-        fix_SPIN = True,
-        fix_B = False,
-        fix_DIF = False,
-        fix_TAUS0 = False,
-        fix_TAUV = True,
-        fix_PROPT = True,
-        fix_gl = True,
+        limit_CONC=(float(params["CONC"]["minM"]),float(params["CONC"]["maxM"])),
+        limit_SPIN=(float(params["SPIN"]["minM"]),float(params["SPIN"]["maxM"])),
+        limit_B=(float(params["B"]["minM"]),float(params["B"]["maxM"])),
+        limit_DIF=(float(params["DIF"]["minM"]),float(params["DIF"]["maxM"])),
+        limit_TAUS0=(float(params["TAUS0"]["minM"]),float(params["TAUS0"]["maxM"])),
+        limit_TAUV=(float(params["TAUV"]["minM"]),float(params["TAUV"]["maxM"])),
+        limit_PROPT=(float(params["PROPT"]["minM"]),float(params["PROPT"]["maxM"])),
+        limit_gl=(float(params["gl"]["minM"]),float(params["gl"]["maxM"])),
+        fix_CONC = params["CONC"]["fixed"],
+        fix_SPIN = params["SPIN"]["fixed"],
+        fix_B = params["B"]["fixed"],
+        fix_DIF = params["DIF"]["fixed"],
+        fix_TAUS0 = params["TAUS0"]["fixed"],
+        fix_TAUV = params["TAUV"]["fixed"],
+        fix_PROPT = params["PROPT"]["fixed"],
+        fix_gl = params["gl"]["fixed"],
     ) 
 
     m.migrad() # finds minimum of least_squares function
@@ -121,8 +123,9 @@ try:
         params[element]["value"] = res[i]
 
 
-    with open("./files/{}.json".format(uid), 'w') as f:
-        f.write(json.dumps(fit))
+    with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
+        f.write(json.dumps(fit,ensure_ascii=False))
     print("OK")
     # sys.exit(42)
 

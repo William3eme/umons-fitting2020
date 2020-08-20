@@ -114,6 +114,17 @@ header > div >img {
     background-color: white;
     border: 1px black solid;
 }
+#configparams{
+    padding: 40px;
+    position: fixed;
+    bottom:0px;
+    right:0px;
+    width: 200px;
+    height:113px;
+    background-color: white;
+    border: 1px black solid;
+}
+
 #getrawdata{
     padding: 20px;
     position: absolute;
@@ -131,7 +142,7 @@ header > div >img {
     flex-wrap: wrap;
     background-color: lightgrey;
     height: 155px;
-    width: 100vw;
+    width: 70vw;
 }
 
 #cell{
