@@ -5,7 +5,7 @@ module.exports = {
     "Translation": require("./Translation"),
     "Transrot": require("./Transrot"),
     "TransrotSS": require("./TransrotSS"),
-    // "SuperPara": require("./SuperPara"),
+    "SuperPara": require("./SuperPara"),
     // "Line": require("./line"),
     // "exp":require("./exp")
 }
