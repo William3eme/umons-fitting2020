@@ -15,17 +15,16 @@ try:
     # print(os.getcwd())
     fit = {}
     with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
-    # with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
         fit = json.loads(f.read())
-    
-    # print(fit)
 
     # Je récupère mes données brutes (rawdata)
     rawdata = list(fit["rawdata"]["data"])
     concentration  = float(fit["rawdata"]["concentration"])
     offset=0
-    if(fit["rawdata"]["offset"]["type"]=="constant"):
-        offset = float(fit["rawdata"]["offset"]["data"])
+    if(fit["rawdata"]["offset"]["type"]=="constant+"):
+        offset = abs(float(fit["rawdata"]["offset"]["data"]))
+    elif(fit["rawdata"]["offset"]["type"]=="constant-"):
+        offset = -abs(float(fit["rawdata"]["offset"]["data"]))
     else:
         offset = (fit["rawdata"]["offset"]["data"])
     rawdata_x=[]
@@ -36,18 +35,11 @@ try:
 
     rawdata_x =  numpy.array(rawdata_x)
     rawdata_y =  numpy.array(rawdata_y)
-
-    rawdata_y = rawdata_y/concentration-offset
-    # print("{} = {}".format(offset,type(offset)))
-    # for i,e in enumerate(rawdata_y):
-    #     print("{}= {} <br>".format(i,(e/concentration)-offset))
+    
+    rawdata_y = rawdata_y/concentration+offset
 
 
     params = fit["model"]["params"]
-    min = params["COLED"]["minM"]
-    max = params["COLED"]["maxM"]
-
-    # print(min,max)
 
     def line(x,COLED,COLEA,COLEFC,COLEB): 
 
@@ -76,7 +68,7 @@ try:
     ) 
 
     m.migrad() # finds minimum of least_squares function
-    # m.hesse()  # computes errors 
+    m.hesse()  # computes errors 
     # m.minos()
 
     res = m.values.values()
@@ -87,16 +79,8 @@ try:
 
 
     with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
-    # with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
         f.write(json.dumps(fit,ensure_ascii=False))
     print("OK")
-    # print(fit)
-    # # sys.exit(42)
-
-# os.close(1)
+    
 except:
     print("PAS OK")
-    # print(fit)
-    # os.close(0)
-    # exit(0)
-

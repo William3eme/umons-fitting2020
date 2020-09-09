@@ -15,7 +15,7 @@
 			<div>
 				<img src="img/add.svg" alt="" @click="addFile = !addFile">
 				<img v-if="File.uid" src="img/del.svg" alt="" v-on:click="deleteFile(File.uid)">
-				<img v-if="File.uid" src="img/download.png" alt="">
+				<img v-if="File.uid" src="img/download.png" v-on:click="downloadFile(File.uid)">
 				<input type="button" value="Minimisation !" @click="Minimise(File)">
 			</div>
 		</header>
@@ -53,11 +53,14 @@
 					Concetration:
 					<input type="number" step="0.1"v-model="File.rawdata.concentration" v-on:change="putFile(File)"><br>
 					Offset type:
-					<input type="radio" v-model="File.rawdata.offset.type" value="constant"  v-on:change="putFile(File)">Constant 
-					<input type="radio" v-model="File.rawdata.offset.type" value="variable" v-on:change="putFile(File)">Variable
+					<input type="radio" v-model="File.rawdata.offset.type" value="constant-"  v-on:change="putFile(File)">Constant -
+					<input type="radio" v-model="File.rawdata.offset.type" value="constant+"  v-on:change="putFile(File)">Constant + </br>
+					<input type="radio" v-model="File.rawdata.offset.type" value="variable" v-on:change="putFile(File)">Variable 
+					<!-- <input type="radio" value="constent+" v-if="pFile.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">+
+					<input type="radio" value="constent-" v-if="pFile.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">- -->
 					<br> 
 					Offset:
-					<input type="number" step="0.01" v-model="File.rawdata.offset.data" v-if="File.rawdata.offset.type == 'constant'" v-on:change="putFile(File)">
+					<input type="number" step="0.01" v-model="File.rawdata.offset.data" v-if="File.rawdata.offset.type == 'constant-' || File.rawdata.offset.type == 'constant+'" v-on:change="putFile(File)">
 					<select v-model="File.rawdata.offset.uid" v-if="File.rawdata.offset.type == 'variable'" v-on:change="putFile(File)">
 						<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
 					</select>
@@ -99,19 +102,25 @@
 		<div id="addFile" v-show="addFile">
 			Fichiers:<input type="file" @change="loadFile"><br>
 			<div v-if="addFile2">
-				Label:<input type="text" v-model="pFile.name" v-bind:value="pFile.rawdata.label"><br>
+				<!-- Label:<input type="text" v-model="pFile.name" v-bind:value="pFile.rawdata.label"><br> -->
+				Label:<input type="text" v-model="pFile.name"><br>
 
 
 				Concentration:<input type="number" step="0.1"v-model="pFile.rawdata.concentration" value="1"><br>
 				Offset type:
-				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant">Constant
-				<input type="radio" v-model="pFile.rawdata.offset.type" value="variable">Variable<br> 
+				<!-- <input type="radio" v-model="pFile.rawdata.offset.type" value="constant">Constant
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="variable">Variable<br>  -->
+
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant-">Constant -
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="constant+">Constant + </br>
+				<input type="radio" v-model="pFile.rawdata.offset.type" value="variable">Variable </br>
+
 				Offset:
 				<input type="number" step="0.01" v-model="pFile.rawdata.offset.data" v-if="pFile.rawdata.offset.type == 'constant'" >
 				<select v-model="pFile.rawdata.offset.uid" v-if="pFile.rawdata.offset.type == 'variable'">
 					<option v-for="file in fileIndex" v-bind:value="file.uid">{{file.name}}</option>
 				</select>
-				
+			</br>
 				<input type="button" value="Envoyer" @click="postFile(pFile)">
 			</div>
 		</div>

@@ -53,11 +53,12 @@ const loadFile = (event)=>{
     let file = new FileReader()
     file.readAsText(event.target.files[0], 'UTF-8');
     file.addEventListener('load', function() {
+        // alert("coucou")
         //ici mettre les données par défaut
         vue.pFile = {type:"Fit"}
-        vue.pFile.rawdata = parseData(file.result)
         vue.addFile2 = true
-        // console.log("done:",vue.pFile.rawdata)
+        vue.pFile.rawdata = parseData(file.result)
+        console.log("Test:",vue.pFile.rawdata)
         // let n
         // while (n==0) {
         //     n=window.prompt("nom du fichier:",temp.label
@@ -156,7 +157,8 @@ var vue = new Vue({
                 if(!res.data.uid)alert("Erreur POST")
                 vue.File = res.data
                 document.cookie = res.data.uid
-                renderGraph(vue.File) 
+                document.location.reload(true);
+                // renderGraph(vue.File) 
                 // vue.postFile = false
             })
         },
@@ -165,6 +167,7 @@ var vue = new Vue({
         validconfig:validconfig,
         axeLoad:axeLoad,
         deleteFile:deleteFile,
+        downloadFile:downloadFile,
         selectModel:selectModel,
         renderGraph:renderGraph,
         loadModel:loadModel,
@@ -198,7 +201,7 @@ function renderGraph(File){
     }else{
         let calcRd = File.rawdata.data
         switch (File.rawdata.offset.type) {
-            case "constant":
+            case "constant-":
                 calcRd = File.rawdata.data.map((d)=>{
                     return{
                         y:(d.y/Number(File.rawdata.concentration))-Number(File.rawdata.offset.data),
@@ -235,6 +238,44 @@ function renderGraph(File){
                     Graph.drawPoints(calcRd) //attention faire le calcul des points
                 }    
                 break;
+
+                case "constant+":
+                    calcRd = File.rawdata.data.map((d)=>{
+                        return{
+                            y:(d.y/Number(File.rawdata.concentration))+Number(File.rawdata.offset.data),
+                            x:d.x
+                        }
+                    }) 
+                    if (d3xt(calcRd,((d)=>{return d.y}))[0] < 0){
+                        File.rawdata.offset.data += 0.01
+                        alert ("nombre négatif")
+                    }
+                    let maxRd2 = Number(d3xt(calcRd,((d)=>{return d.y}))[1])
+                    if(maxY < maxRd2){
+                        maxY = maxRd2*1.1
+                    }
+                    if(File.model){
+                        for (let element in vue.File.model.params){
+                            vue.File.model.params[element].value = parseFloat(vue.File.model.params[element].value)
+                            vue.File.model.params[element].step = parseFloat(vue.File.model.params[element].step)
+                        }
+                        File.model.data = calcul(File.model)
+                        let maxMd = Number(d3xt(File.model.data,((d)=>{return d.y}))[1])
+                        // console.log("test",vue.File.model.params.TAUM);
+                        if(maxY < maxMd){
+                            maxY = maxMd*1.1
+                        } 
+                        Graph.updateAxeY([0,maxY])
+                        Graph.drawPoints(calcRd)
+                        Graph.drawLine(File.model.data)
+                    }
+                    else
+                    {
+                        Graph.drawLine([])
+                        Graph.updateAxeY([0,maxY])
+                        Graph.drawPoints(calcRd) //attention faire le calcul des points
+                    }    
+                    break;
         
             case "variable":
                 let ofit={}
@@ -335,4 +376,13 @@ function loadModel(event){
     // if(index > 0){
     // }
     // alert(model)
+}
+
+function downloadFile(uid){
+    // alert("heeo")
+    http.get(`/api/files/dl/${uid}/`)
+        .then((res)=>{
+            console.log(res)
+            if(res.data == "ok")alert("Fichier généré avec succes sur le repertoire /download du serveur !")
+        })
 }

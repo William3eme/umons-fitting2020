@@ -12,7 +12,7 @@ module.exports = {
             step:1E-4,
             minM:1E-4,
             maxM:1E-2,
-            // stepM:1E-4,
+            stepM:1E-4,
             factM:1.0,
             fixed:true,
             display:true,

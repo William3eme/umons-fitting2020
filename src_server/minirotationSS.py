@@ -20,8 +20,10 @@ try:
     rawdata = list(fit["rawdata"]["data"])
     concentration  = float(fit["rawdata"]["concentration"])
     offset=0
-    if(fit["rawdata"]["offset"]["type"]=="constant"):
-        offset = float(fit["rawdata"]["offset"]["data"])
+    if(fit["rawdata"]["offset"]["type"]=="constant+"):
+        offset = abs(float(fit["rawdata"]["offset"]["data"]))
+    elif(fit["rawdata"]["offset"]["type"]=="constant-"):
+        offset = -abs(float(fit["rawdata"]["offset"]["data"]))
     else:
         offset = (fit["rawdata"]["offset"]["data"])
     rawdata_x=[]
@@ -32,8 +34,8 @@ try:
 
     rawdata_x =  numpy.array(rawdata_x)
     rawdata_y =  numpy.array(rawdata_y)
-
-    rawdata_y = rawdata_y/concentration-offset
+    
+    rawdata_y = rawdata_y/concentration+offset
     # print("{} = {}".format(offset,type(offset)))
 
 

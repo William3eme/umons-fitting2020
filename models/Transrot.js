@@ -15,7 +15,7 @@ module.exports = {
            maxM:1E-2,
            stepM:1E-4,
            factM:1.0,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         SOLV:{
@@ -27,7 +27,7 @@ module.exports = {
            maxM:8.0,
            stepM:0.1,
            factM:1.0,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         PROPR:{
@@ -39,7 +39,7 @@ module.exports = {
            maxM:1.0E2,
            stepM:0.1,
            factM:1.0,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         SPIN:{
@@ -51,7 +51,7 @@ module.exports = {
            maxM:4.5,
            stepM:0.5,
            factM:1.0,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         B:{
@@ -64,7 +64,7 @@ module.exports = {
            maxM:4.5E-8,
            stepM:0.1E-8,
            factM:1E8,
-           fixed:"false",
+           fixed:false,
            varience:1
         },
         DIF:{
@@ -77,7 +77,7 @@ module.exports = {
            maxM:5.0E-5,
            stepM:0.1E-6,
            factM:1E6,
-           fixed:"false",
+           fixed:false,
            varience:1
         },
         TAUS0:{
@@ -90,7 +90,7 @@ module.exports = {
            maxM:1E-8,
            stepM:1E-12,
            factM:1E12,
-           fixed:"false",
+           fixed:false,
            varience:1
         },
         TAUV:{
@@ -100,11 +100,11 @@ module.exports = {
            unite:"s",
            min:0,
            step:1E-12,
-           minM:1E12,
+           minM:1E-12,
            maxM:1E-8,
            stepM:1E-13,
            factM:1E12,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         PROPT:{
@@ -116,7 +116,7 @@ module.exports = {
            maxM:1E2,
            stepM:0.1,
            factM:1.0,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         gl:{
@@ -127,7 +127,7 @@ module.exports = {
            minM:0.01,
            maxM:3,
            stepM:0.01,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
       //   VMHFL:{
@@ -143,7 +143,7 @@ module.exports = {
            maxM:1E-6,
            stepM:1E-11,
            factM:1E12,
-           fixed:"false",
+           fixed:false,
            varience:1
         },
         TAUR:{
@@ -156,19 +156,21 @@ module.exports = {
            maxM:1E-8,
            stepM:1E-12,
            factM:1E12,
-           fixed:"false",
+           fixed:false,
            varience:1
         },
-        dw:{
-           value:0,
-           label:"Delta w",
-           detail:"Chemical shift of coordinated nucleus",
-           unite:"",
-           min:0,
-           step:1E-11,
-           fixed:"true",
-           varience:1
-        },
+      //   dw:{
+      //      value:0,
+      //      label:"Delta w",
+      //      detail:"Chemical shift of coordinated nucleus",
+      //      unite:"",
+      //    //   min:0,
+      //      minM:0,
+      //      maxM:100,
+      //      step:1E-11,
+      //      fixed:true,
+      //      varience:1
+      //   },
       //   mu:{
       //      value:1,
       //      detail:"si dw == 0 => mu = 1 sinon faire calcule pour mu"
@@ -184,7 +186,7 @@ module.exports = {
            maxM:1E8,
            stepM:1E6,
            factM:1E-4,
-           fixed:"true",
+           fixed:true,
            varience:1
         },
         distrot:{
@@ -197,7 +199,7 @@ module.exports = {
            maxM:4.5E-8,
            stepM:0.1E-8,
            factM:1E-8,
-           fixed:"false",
+           fixed:false,
            varience:1
         }
     },

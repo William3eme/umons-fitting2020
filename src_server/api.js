@@ -5,7 +5,8 @@ const fs = require("fs")
 const express = require("express")
 const morgan = require("morgan")
 // let __path = path.join(__dirname,"../files/")
-const bodyParser = require("body-parser")
+const bodyParser = require("body-parser");
+const { stratify } = require('d3');
 
 const Fit = require("./core").Fit
 
@@ -126,6 +127,39 @@ FileAPI.route("/:uid")  //sélectionne un fichier de la iste des filles et renvo
         }
 
     })
+
+FileAPI.route("/dl/:uid").get((req,res)=>{
+    let fit = new Fit()
+    fit.loadFile(req.params.uid,(err)=>{
+        if(err){
+            res.send ({error:err, status:'error'})
+        }
+        else {
+            try{
+
+            
+            let model = fit.extract().model
+            let params = model.params
+            let tmp  = []
+            for (element in params){
+                tmp.push({"key":element,"value":params[element].value})
+            }
+            let toreturn = "fichier fit:\r\n"
+            for(i in model.data){
+                toreturn += `${model.data[i].x}  ${model.data[i].y} `
+                if(i < tmp.length) toreturn +=` ${tmp[i].key}   ${tmp[i].value}`
+                toreturn += "\r\n"
+            }
+            fs.writeFileSync(`./download/${req.params.uid}.dat`,toreturn)
+            res.send("ok")
+            }catch(err){
+                console.log(err.message)
+                res.send("pas ok")
+            }
+        }
+    }) 
+
+})
 MiniAPI.route("/:minimisation/:uid")
     .get((req,res)=>{
         const {spawn} = require('child_process');

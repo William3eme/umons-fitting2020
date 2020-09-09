@@ -7,7 +7,7 @@ module.exports = {
         COLED:{
             label:"D",
             detail:"contribution de la dispersion",
-            value:2.0,
+            value:1E-1,
             step:0.1,
             minM:0.1,
             maxM:9E1,
@@ -19,7 +19,7 @@ module.exports = {
         COLEA:{
             label:"A",
             detail:"amplitude à bas champ",
-            value:6E0,
+            value:1E0,
             step:0.1,
             minM:0.1,
             maxM:6E1,
@@ -32,7 +32,7 @@ module.exports = {
             label:"fc",
             detail:"fréquence d’inflexion en Hertz",
             unit:"hz",
-            value:1E7,
+            value:1E6,
             step:1E6,
             minM:1E3,
             maxM:2E8,
@@ -44,7 +44,7 @@ module.exports = {
         COLEB:{
             label:"B'",
             detail:"paramètre beta",
-            value:2.0,
+            value:5E-1,
             step:0.1,
             minM:0.1,
             maxM:3.0,

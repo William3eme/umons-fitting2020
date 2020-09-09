@@ -13,15 +13,18 @@ try:
     uid = sys.argv [1]
     # print(os.getcwd())
     fit = {}
-    with open("./files/{}.json".format(uid), 'r') as f:
+    with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
+    # with codecs.open("./files/{}.json".format(uid), "r" , "utf-8") as f:
         fit = json.loads(f.read())
 
     # Je récupère mes données brutes (rawdata)
     rawdata = list(fit["rawdata"]["data"])
     concentration  = float(fit["rawdata"]["concentration"])
     offset=0
-    if(fit["rawdata"]["offset"]["type"]=="constant"):
-        offset = float(fit["rawdata"]["offset"]["data"])
+    if(fit["rawdata"]["offset"]["type"]=="constant+"):
+        offset = abs(float(fit["rawdata"]["offset"]["data"]))
+    elif(fit["rawdata"]["offset"]["type"]=="constant-"):
+        offset = -abs(float(fit["rawdata"]["offset"]["data"]))
     else:
         offset = (fit["rawdata"]["offset"]["data"])
     rawdata_x=[]
@@ -32,8 +35,8 @@ try:
 
     rawdata_x =  numpy.array(rawdata_x)
     rawdata_y =  numpy.array(rawdata_y)
-
-    rawdata_y = rawdata_y/concentration-offset
+    
+    rawdata_y = rawdata_y/concentration+offset
     # print("{} = {}".format(offset,type(offset)))
 
 
@@ -42,7 +45,9 @@ try:
     # for i,e in enumerate(params):
     #     print("{}= {}".format(i,e))
 
-    def line(x,CONC,SOLV,PROPR,gl,SPIN,TAUV,TAUS0,TAUM,TAUR,dw,COUPL,distrot,B,DIF,PROPT): 
+ 
+    def line(x,CONC,SOLV,PROPR,SPIN,B,DIF,TAUS0,TAUV,PROPT,gl,TAUM,TAUR,COUPL,distrot): 
+        
         VMHFL = 1
         freq1 = x * 2E6 * numpy.pi
         freq2 = freq1 * 656 #tester 658
@@ -95,63 +100,62 @@ try:
         JTOT2 = TCR2/(1+numpy.power((freq2*TCR2),2))
         RR1   = CMR*((3*JTOT1)+(7*JTOT2))+(CMS*TCS2)/(1+numpy.power(freq2*TCS2,2))
         T1M = 1/RR1 # T1m
-        R1rot = PROPR*(((CONC/55.55)*SOLV)/(T1M+TAUM));  #PROPR    # Y de R1
+        R1rot = PROPR*((CONC/55.55)*SOLV)/(T1M+TAUM)  #PROPR    # Y de R1
         # return x
-        return PROPR*(((CONC/55.55)*SOLV)/(T1M+TAUM))+CMT*(3*DESPE1+7*DESPE2)
-
+        # print(R1trans + R1rot)
+        return R1trans + R1rot
     data_yerr = 0.000001
+ 
     least_squares = LeastSquares(rawdata_x, rawdata_y, data_yerr, line)
     # pass starting values for a and b
-
+    # print("coucou1")
     m = Minuit(least_squares,
-        CONC=params["CONC"]["value"],
-        SOLV=params["SOLV"]["value"],
-        PROPR=params["PROPR"]["value"],
-        gl=params["gl"]["value"],
-        SPIN=params["SPIN"]["value"],
-        TAUV=params["TAUV"]["value"],
-        TAUS0=params["TAUS0"]["value"],
-        TAUM=params["TAUM"]["value"],
-        TAUR=params["TAUR"]["value"],
-        dw=params["dw"]["value"],
-        COUPL=params["COUPL"]["value"],
-        distrot=params["distrot"]["value"],
-        B=params["B"]["value"],
-        DIF=params["DIF"]["value"],
-        PROPT=params["PROPT"]["value"],        
-        limit_CONC=(1E-4, 1E-2),
-        limit_SOLV=(1.0, 8.0),
-        limit_PROPR=(0.1,1.0E2),
-        limit_gl=(0.1,3),
-        limit_SPIN=(0.5,4.5),
-        limit_TAUV=(1E-12,1e-8),
-        limit_TAUS0=(1E-11,1E-8),
-        limit_TAUM=(1E-10,1E-6),
-        limit_TAUR=(1E-12,1E-8),
-        limit_dw=(0,100000),
-        limit_COUPL=(1E6,1E8),
-        limit_distrot=(1.5E-8,4.5E-8),
-        limit_B=(1.5E-8,4.5E-8),
-        limit_DIF=(4.0E-6,5.0E-5),
-        limit_PROPT=(0.1,1E2),
-        fix_CONC = True,
-        fix_SOLV = True,
-        fix_PROPR = True,
-        fix_gl = True,
-        fix_SPIN = True,
-        fix_TAUV = False,
-        fix_TAUS0 = False,
-        fix_TAUM = False,
-        fix_TAUR = False,
-        fix_dw = True,
-        fix_COUPL = True,
-        fix_distrot = False,
-        fix_B = False,
-        fix_DIF = False,
-        fix_PROPT = True,
+        CONC=float(params["CONC"]["value"]),
+        SOLV=float(params["SOLV"]["value"]),
+        PROPR=float(params["PROPR"]["value"]),
+        SPIN=float(params["SPIN"]["value"]),
+        B=float(params["B"]["value"]),
+        DIF=float(params["DIF"]["value"]),
+        TAUS0=float(params["TAUS0"]["value"]),
+        TAUV=float(params["TAUV"]["value"]),
+        PROPT=float(params["PROPT"]["value"]),        
+        gl=float(params["gl"]["value"]),
+        TAUM=float(params["TAUM"]["value"]),
+        TAUR=float(params["TAUR"]["value"]),
+        COUPL=float(params["COUPL"]["value"]),
+        distrot=float(params["distrot"]["value"]),
+        limit_CONC=(float(params["CONC"]["minM"]),float(params["CONC"]["maxM"])),
+        limit_SOLV=(float(params["SOLV"]["minM"]),float(params["SOLV"]["maxM"])),
+        limit_PROPR=(float(params["PROPR"]["minM"]),float(params["PROPR"]["maxM"])),
+        limit_SPIN=(float(params["SPIN"]["minM"]),float(params["SPIN"]["maxM"])),
+        limit_B=(float(params["B"]["minM"]),float(params["B"]["maxM"])),
+        limit_DIF=(float(params["DIF"]["minM"]),float(params["DIF"]["maxM"])),
+        limit_TAUS0=(float(params["TAUS0"]["minM"]),float(params["TAUS0"]["maxM"])),
+        limit_TAUV=(float(params["TAUV"]["minM"]),float(params["TAUV"]["maxM"])),
+        limit_PROPT=(float(params["PROPT"]["minM"]),float(params["PROPT"]["maxM"])),
+        limit_gl=(float(params["gl"]["minM"]),float(params["gl"]["maxM"])),
+        limit_TAUM=(float(params["TAUM"]["minM"]),float(params["TAUM"]["maxM"])),
+        limit_TAUR=(float(params["TAUR"]["minM"]),float(params["TAUR"]["maxM"])),
+        limit_COUPL=(float(params["COUPL"]["minM"]),float(params["COUPL"]["maxM"])),
+        limit_distrot=(float(params["distrot"]["minM"]),float(params["distrot"]["maxM"])),
+        fix_CONC = params["CONC"]["fixed"],
+        fix_SOLV = params["SOLV"]["fixed"],
+        fix_PROPR = params["PROPR"]["fixed"],
+        fix_SPIN = params["SPIN"]["fixed"],
+        fix_B = params["B"]["fixed"],
+        fix_DIF = params["DIF"]["fixed"],
+        fix_TAUS0 = params["TAUS0"]["fixed"],
+        fix_TAUV = params["TAUV"]["fixed"],
+        fix_PROPT = params["PROPT"]["fixed"],
+        fix_gl = params["gl"]["fixed"],
+        fix_TAUM = params["TAUM"]["fixed"],
+        fix_TAUR = params["TAUR"]["fixed"],
+        fix_COUPL = params["COUPL"]["fixed"],
+        fix_distrot = params["distrot"]["fixed"],
+
     ) 
-
-
+    # print("coucou2")
+    
     m.migrad() # finds minimum of least_squares function
     m.hesse()  # computes errors 
 
@@ -159,6 +163,7 @@ try:
     for i,element in enumerate(params):
         params[element]["value"] = res[i]
 
+    # print(params)
 
     with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
     # with codecs.open("./files/{}.json".format(uid), 'w',"utf-8") as f:
