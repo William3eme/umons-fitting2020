@@ -104,7 +104,7 @@ module.exports = {
            maxM:1E-8,
            stepM:1E-13,
            factM:1E12,
-           fixed:true,
+           fixed:false,
            varience:1
         },
         PROPT:{

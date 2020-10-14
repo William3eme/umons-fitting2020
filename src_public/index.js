@@ -289,9 +289,13 @@ function renderGraph(File){
                             return ofit.model.run(f).y
                         })
                         calcRd = File.rawdata.data.map((d,i)=>{
+                            // return{
+                            //     x:d.x,
+                            //     y:(d.y/Number(File.rawdata.concentration))-Number(File.rawdata.offset.data[i]),
+                            // }
                             return{
                                 x:d.x,
-                                y:(d.y/Number(File.rawdata.concentration))-Number(File.rawdata.offset.data[i]),
+                                y:(d.y/Number(File.rawdata.concentration))-2,   
                             }
                         })
                         // console.log(calcRd)

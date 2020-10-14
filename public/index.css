@@ -95,7 +95,7 @@ header > div >img {
     flex-grow: 1;
 }
 #ConfArea{
-    height: 200px;
+    height: 210px;
     display: flex;
     flex-direction: row;
     /* background-color: pink; */
@@ -124,6 +124,62 @@ header > div >img {
     background-color: white;
     border: 1px black solid;
 }
+#xaxis{
+    padding: 0px;
+    position: absolute;
+    bottom:210px;
+    right:10px;
+    width: 80px;
+    height:25px;
+    background-color: white;
+    border: 1px white;
+}
+
+#yaxis{
+    padding: 0px;
+    position: absolute;
+    bottom:770px;
+    right:1565px;
+    width: 150px;
+    height:25px;
+    background-color: white;
+    border: 1px white;
+    transform: rotate(-90deg);
+}
+
+#yaxis2{
+    padding: 0px;
+    position: absolute;
+    bottom:820px;
+    right:1605px;
+    width: 50px;
+    height:25px;
+    background-color: white;
+    border: 1px white;
+}
+
+#yaxis3{
+    padding: 0px;
+    position: absolute;
+    bottom:720px;
+    right:1565px;
+    width: 150px;
+    height:25px;
+    background-color: white;
+    border: 1px white;
+    transform: rotate(-90deg);
+}
+
+#yaxis4{
+    padding: 0px;
+    position: absolute;
+    bottom:820px;
+    right:1600px;
+    width: 50px;
+    height:25px;
+    background-color: white;
+    border: 1px white;
+}
 
 #getrawdata{
     padding: 20px;
@@ -135,6 +191,7 @@ header > div >img {
     background-color: white;
     border: 1px black solid;
 }
+
 
 #container{
     display:flex;
@@ -152,3 +209,4 @@ header > div >img {
     width: 300px;
     margin: 2px;
 }
+

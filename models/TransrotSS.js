@@ -20,7 +20,7 @@ module.exports = {
         },
        SOLV:{
            value:1,
-           label:"q",
+           label:"q ss",
            detail:"nombre de molécules d’eau dans la première sphère d’hydratation",
            step:1.0,
            minM:0.5,
@@ -132,7 +132,7 @@ module.exports = {
         },
        TAUM:{
            value:1e-7,
-           label:"Tau M",
+           label:"Tau M ss",
            detail:"Water residence time",
            unite:"s",
            step:1E-8,
@@ -145,7 +145,7 @@ module.exports = {
         },
        TAUR:{
            value:5e-11,
-           label:"Tau R",
+           label:"Tau R ss",
            detail:"Rotational correlation time",
            unite:"s",
            step:1E-12,

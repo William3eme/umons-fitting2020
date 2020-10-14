@@ -57,6 +57,7 @@ module.exports = {
             .attr("class","gY")
   
         this.container.append("path").attr("class", "gLine")
+
     },
     
     drawPoints:function(data){

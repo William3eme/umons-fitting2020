@@ -70,7 +70,7 @@ module.exports = {
             maxM:1.0,
             stepM:0.0,
             factM:1.0,
-            fixed:true,
+            fixed:false,
             display:true,
             varience:1
         },
